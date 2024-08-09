@@ -1,0 +1,15 @@
+{% extends 'App1/base.html' %}
+
+{% block content %}
+<h2>Resetear Datos</h2>
+<p>¿Ya descargaste tus datos? Antes de proceder, asegúrate de haber descargado tus datos.</p>
+<p>Introduce tu contraseña para confirmar la eliminación de todos los ingresos y gastos.</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="password">Contraseña:</label>
+    <input type="password" name="password" id="password" required>
+    <button type="submit">Resetear Datos</button>
+</form>
+
+{% endblock %}

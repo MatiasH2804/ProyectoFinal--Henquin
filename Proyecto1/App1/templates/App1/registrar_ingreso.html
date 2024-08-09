@@ -1,0 +1,10 @@
+{% extends 'App1/base.html' %}
+{% block title %}Registrar Ingreso{% endblock %}
+{% block content %}
+<h2>Registrar Ingreso</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Registrar</button>
+</form>
+{% endblock %}

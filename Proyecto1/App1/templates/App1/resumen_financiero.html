@@ -1,0 +1,110 @@
+{% extends 'App1/base.html' %}
+{% block title %}Resumen Financiero{% endblock %}
+{% block content %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    th, td {
+        white-space: pre;  /* Mantener los espacios en blanco */
+    }
+</style>
+<button id="download-btn" class="btn btn-primary">Descargar Datos</button>
+<button id="reset-btn" class="btn btn-danger">Resetear Datos</button>
+<h2>Resumen Financiero</h2>
+
+<h3>Ingresos</h3>
+
+
+<table>
+    <tr>
+        <th>Fecha</th>
+        <th>Monto</th>
+        <th>      Categoria</th>  <!-- Añadir más espacios para separar -->
+    </tr>
+    {% for ingreso in ingresos %}
+    <tr>
+        <td>{{ ingreso.fecha }}</td>
+        <td>{{ ingreso.cantidad }}</td>
+        <td>{{ ingreso.categoria }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>Gastos</h3>
+<table>
+    <tr>
+        <th>Fecha</th>
+        <th>Monto</th>
+        <th>      Categoria</th>
+        <th>      Medio de Pago</th>
+        <th>      Otros</th>
+    </tr>
+    {% for gasto in gastos %}
+    <tr>
+        <td>{{ gasto.fecha }}</td>
+        <td>{{ gasto.cantidad }}</td>
+        <td>{{ gasto.categoria }}</td>
+        <td>{{ gasto.medio_pago }}</td>
+        <td>{{ gasto.otros }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>Resumen Financiero</h3>
+<table>
+    <tr>
+        <th>Saldo Restante</th>
+        <th>Total Ingresos</th>
+        <th>Total Gastos</th>
+    </tr>
+    <tr>
+        <td>{{ saldo_restante }}</td>
+        <td>{{ total_ingresos }}</td>
+        <td>{{ total_gastos }}</td>
+    </tr>
+</table>
+
+<script>
+    document.getElementById('download-btn').onclick = function() {
+        window.location.href = '{% url "download_data" %}';
+    };
+
+    document.getElementById('reset-btn').onclick = function() {
+        const password = prompt("Antes de borrar, ¿ya descargaste tus datos? Introduce tu contraseña:");
+        if (password) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{% url "reset_data" %}';
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = 'csrfmiddlewaretoken';
+            csrfToken.value = '{{ csrf_token }}';
+            form.appendChild(csrfToken);
+            const passwordField = document.createElement('input');
+            passwordField.type = 'hidden';
+            passwordField.name = 'password';
+            passwordField.value = password;
+            form.appendChild(passwordField);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    };
+</script>
+
+{% endblock %}
